@@ -1,0 +1,12 @@
+config:
+  pipelines:
+    - name: firstETL
+      metadata: 
+        name: nombre test
+        tag: first tag
+      steps:
+        extract:
+          - name: postgres
+            query: SELECT * FROM public.test
+          - name: postgres2
+            query: SELECT 1 as A FROM public.test
