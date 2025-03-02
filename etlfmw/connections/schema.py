@@ -1,6 +1,18 @@
 from pydantic import BaseModel
-from typing import Union, List, Dict, Optional
+from typing import Type, TypeVar
 from enum import Enum
+
+# Registry to store models
+registered_types: list[Type[BaseModel]] = []
+
+def register_connection_type(cls: Type[BaseModel]) -> Type[BaseModel]:
+    registered_types.append(cls)
+    return cls
+
+
+class ConnectionTypeEnum(Enum):
+
+    POSTGRES = 'postgres'
 
 class EnvironmentCollectionNameEnum(Enum):
 
@@ -14,6 +26,7 @@ class TypingConfig(BaseModel):
     class Config:
         extra = 'forbid'
 
+@register_connection_type
 class PostgresConnectionSchema(TypingConfig):
 
     host: str
@@ -22,21 +35,40 @@ class PostgresConnectionSchema(TypingConfig):
     user: str
     password: str
 
+if len(registered_types) == 1:
+    ConnectionsSchemaList = TypeVar('ConnectionsSchemaList', bound=registered_types[0])
+else:
+    ConnectionsSchemaList = TypeVar('ConnectionsSchemaList', *registered_types)
+
 class ConnectionSchema(TypingConfig):
 
     name: str
-    type: str
-    metadata: Optional[Dict[str,str]]
-    params: Union[PostgresConnectionSchema]
+    type: ConnectionTypeEnum
+    metadata: dict[str,str] | None
+    params: ConnectionsSchemaList
 
 class ConnectionsCollectionSchema(TypingConfig):
 
-    connections: List[ConnectionSchema]
+    connections: list[ConnectionSchema]
 
 class EnvironmentCollectionSchema(TypingConfig):
 
-    environments: Dict[EnvironmentCollectionNameEnum, ConnectionsCollectionSchema]
+    environments: dict[EnvironmentCollectionNameEnum, ConnectionsCollectionSchema]
 
 class ConnectionsConfigSchema(TypingConfig):
 
     connections: EnvironmentCollectionSchema
+
+    def instantiate_connections(self):
+
+        ...
+
+__all__ = [
+    'PostgresConnectionSchema',
+    'ConnectionSchema',
+    'ConnectionsCollectionSchema',
+    'EnvironmentCollectionSchema',
+    'ConnectionsConfigSchema',
+    'ConnectionTypeEnum',
+    'EnvironmentCollectionNameEnum'
+    ]

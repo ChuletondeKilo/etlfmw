@@ -1,21 +1,23 @@
 from ..interfaces import ConnectionI
 import psycopg2
-from psycopg2._psycopg import connection
+from psycopg2._psycopg import connection as postgreconn
+from ..connections.schema import PostgresConnectionSchema, ConnectionSchema
 from ..loggers import log_message
 
 class ConnectionPostgre(ConnectionI):
 
-    def __init__(self):
-        self.connection: connection = None
+    __slots__ = ['metadata', '_params']
+
+    def __init__(self, connection: ConnectionSchema):
+
+        self.metadata: dict = {k: v for k, v in connection.__dict__.items() if k != 'params'}
+        self._connparams: PostgresConnectionSchema = connection["params"]
+        self.connection: postgreconn = None
 
     def connect(self):
         try:
             connection = psycopg2.connect(
-                dbname="postgres",
-                user="postgres",
-                password="Rotiman1*",
-                host="localhost",
-                port="5432"
+                **self._connparams
             )
             self.connection = connection
         except Exception as e:

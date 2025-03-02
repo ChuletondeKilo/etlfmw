@@ -1,5 +1,4 @@
 from pydantic import BaseModel
-from typing import Union, List, Dict, Optional
 
 class TypingConfig(BaseModel):
 
@@ -13,7 +12,7 @@ class ExtractorSchema(TypingConfig):
 
 class ExtractorCollectionSchema(TypingConfig):
 
-    extract: List[ExtractorSchema]
+    extract: list[ExtractorSchema]
 
 class LoaderSchema(TypingConfig):
 
@@ -22,17 +21,17 @@ class LoaderSchema(TypingConfig):
 
 class LoaderCollectionSchema(TypingConfig):
 
-    load: List[LoaderSchema]
+    load: list[LoaderSchema]
 
 class PipelineSchema(TypingConfig):
 
     name: str
-    metadata: Dict[str, Union[str,int]]
-    steps: Dict[str, Optional[Union[List[Union[ExtractorSchema, LoaderSchema]], ExtractorSchema, LoaderSchema]]]
+    metadata: dict[str, str | int]
+    steps: dict[str, list[ExtractorSchema | LoaderSchema] | ExtractorSchema | LoaderSchema] | None
 
 class PipelineCollectionSchema(TypingConfig):
 
-    pipelines: List[PipelineSchema]
+    pipelines: list[PipelineSchema]
 
 class PipelinesConfigSchema(TypingConfig):
 
