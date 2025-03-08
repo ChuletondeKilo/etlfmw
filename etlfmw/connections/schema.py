@@ -1,5 +1,5 @@
 from pydantic import BaseModel
-from typing import Type, TypeVar
+from typing import Type, TypeVar, Optional
 from enum import Enum
 
 # Registry to store models
@@ -46,10 +46,15 @@ class ConnectionSchema(TypingConfig):
     type: ConnectionTypeEnum
     metadata: dict[str,str] | None
     params: ConnectionsSchemaList
+    recon_info: Optional[dict[str,str|int]] | None = None
 
 class ConnectionsCollectionSchema(TypingConfig):
 
-    connections: list[ConnectionSchema]
+    sources: list[ConnectionSchema]
+
+    def gather_conn_names(self):
+
+        return {item.name.upper(): item.name for item in self.sources}
 
 class EnvironmentCollectionSchema(TypingConfig):
 

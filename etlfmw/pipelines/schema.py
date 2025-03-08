@@ -1,4 +1,5 @@
 from pydantic import BaseModel
+from ..connections.config import available_connections
 
 class TypingConfig(BaseModel):
 
@@ -8,6 +9,7 @@ class TypingConfig(BaseModel):
 class ExtractorSchema(TypingConfig):
 
     name: str
+    source: available_connections
     query: str
 
 class ExtractorCollectionSchema(TypingConfig):
@@ -36,6 +38,10 @@ class PipelineCollectionSchema(TypingConfig):
 class PipelinesConfigSchema(TypingConfig):
 
     config: PipelineCollectionSchema
+
+    def pipelines_list(self) -> list[PipelineSchema]:
+
+        return self.config.pipelines
 
 __all__ = [
     'PipelinesConfigSchema',

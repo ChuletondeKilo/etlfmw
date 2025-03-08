@@ -1,7 +1,7 @@
 from typing import Any
 from ..interfaces import ExtractorI, ConnectionI as ExtractorI, ConnectionI
 from ..loggers import log_message
-from ..config.schema import ExtractorSchema
+from ..pipelines.schema import ExtractorSchema
 from uuid import uuid4
 
 class Extractor(ExtractorI):

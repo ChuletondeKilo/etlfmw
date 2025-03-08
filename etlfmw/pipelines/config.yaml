@@ -7,6 +7,8 @@ config:
       steps:
         extract:
           - name: postgres
+            source: postgres_local
             query: SELECT * FROM public.test
           - name: postgres2
+            source: postgres_local
             query: SELECT 1 as A FROM public.test

@@ -8,6 +8,9 @@ class ConnectionI(ABC):
     def disconnect(self): ...
 
     @abstractmethod
+    def reconnect(self): ...
+
+    @abstractmethod
     def execute(self, query): ...
 
     @abstractmethod

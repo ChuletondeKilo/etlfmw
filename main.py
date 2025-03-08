@@ -1,12 +1,9 @@
-from etlfmw.extractors.extractor import Extractor
-from etlfmw.connections.postgres import ConnectionPostgre
-from yaml import safe_load
+import etlfmw
+from etlfmw.connections.config import config as conn_config
+from etlfmw.pipelines.config import config as pipeline_config
 
-with open('./config.yaml') as f:
-    config = safe_load(f)
-
-pipeline = Pipeline(steps=[Extractor(connection=ConnectionPostgre(config['postgres']))])
-pipeline.run()
+# pipeline = Pipeline(steps=[Extractor(connection=ConnectionPostgre(config['postgres']))])
+# pipeline.run()
 
 
 
