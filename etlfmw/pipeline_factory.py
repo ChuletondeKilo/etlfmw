@@ -1,5 +1,6 @@
-import pipelines.pipeline as pipeline
+import connections.config
+#  import pipelines.pipeline as pipeline
 
-class PipelineFactory:
-    def __init__(self, steps):
-        self.steps = steps
+# class PipelineFactory:
+#     def __init__(self, steps):
+#         self.steps = steps

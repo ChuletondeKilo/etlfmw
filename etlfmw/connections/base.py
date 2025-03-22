@@ -1,17 +1,22 @@
 from ..interfaces import ConnectionI
+from .schema import ConnectionsCollectionSchema
+from ..interfaces import ConnectionI
 import psycopg2
 from psycopg2._psycopg import connection as postgreconn, cursor as postgrecursor
 from psycopg2.errors import OperationalError
 from ..connections.schema import PostgresConnectionSchema, ConnectionSchema
+from .utils import register_connection_class, connection_types
 
+
+@register_connection_class("postgres")
 class ConnectionPostgre(ConnectionI):
 
     __slots__ = ['metadata', '_params', 'recon_info', 'connection', 'cursor']
 
     def __init__(self, connection: ConnectionSchema):
 
-        self.metadata: dict = {k: v for k, v in connection.__dict__.items() if k not in ('params','recon_info')}
-        self._connparams: PostgresConnectionSchema = connection["params"]
+        self.metadata: dict = getattr(connection, "metadata", None)
+        self._connparams: PostgresConnectionSchema = getattr(connection, "params", None)
         self.recon_info: dict = getattr(connection, "recon_info", None)
         self.connection: postgreconn = None
         self.cursor: postgrecursor = None
@@ -82,3 +87,18 @@ class ConnectionPostgre(ConnectionI):
     def load(self, data):
 
         ...
+
+class connectionsManager:
+
+    def __init__(self, connections_coll_schema: ConnectionsCollectionSchema):
+
+        self.connections_coll_schema: ConnectionsCollectionSchema = connections_coll_schema
+        self.connections_pool: dict = {}
+
+    def instantiate_connections(self) -> ConnectionI:
+
+        for connection in self.connections_coll_schema.sources:
+
+            if connection.name not in self.connections_pool:
+                
+                self.connections_pool[connection.name] = connection_types[connection.type](connection)

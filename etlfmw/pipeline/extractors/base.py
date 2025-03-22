@@ -1,7 +1,6 @@
 from typing import Any
-from ..interfaces import ExtractorI, ConnectionI as ExtractorI, ConnectionI
-from ..loggers import log_message
-from ..pipelines.schema import ExtractorSchema
+from ...interfaces import ExtractorI, ConnectionI as ExtractorI, ConnectionI
+from ..schema import ExtractorSchema
 from uuid import uuid4
 
 class Extractor(ExtractorI):
@@ -14,7 +13,7 @@ class Extractor(ExtractorI):
 
     def extract(self, **kwargs) -> Any:
         
-        log_message('execution_logs', self.extractor_uuid)
+        print('execution_logs', self.extractor_uuid)
         self.connection.connect()
         result = self.connection.execute(**kwargs)
         self.connection.disconnect()

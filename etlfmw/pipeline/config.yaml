@@ -6,9 +6,9 @@ config:
         tag: first tag
       steps:
         extract:
-          - name: postgres
-            source: postgres_local
+          - name: postgres_local
+            type: postgres
             query: SELECT * FROM public.test
-          - name: postgres2
-            source: postgres_local
+          - name: postgres_local2
+            type: postgres
             query: SELECT 1 as A FROM public.test

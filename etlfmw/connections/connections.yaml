@@ -3,7 +3,7 @@ connections:
     dev:
       sources:
         - name: postgres_local
-          type: postgres
+          type: postgres2
           metadata:
             key: value pairs
           recon_info:

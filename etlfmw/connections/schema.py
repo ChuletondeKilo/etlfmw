@@ -1,25 +1,7 @@
-from pydantic import BaseModel
+from pydantic import BaseModel, field_validator
 from typing import Type, TypeVar, Optional
 from enum import Enum
-
-# Registry to store models
-registered_types: list[Type[BaseModel]] = []
-
-def register_connection_type(cls: Type[BaseModel]) -> Type[BaseModel]:
-    registered_types.append(cls)
-    return cls
-
-
-class ConnectionTypeEnum(Enum):
-
-    POSTGRES = 'postgres'
-
-class EnvironmentCollectionNameEnum(Enum):
-
-    LOCAL = 'local'
-    DEV = 'dev'
-    TEST = 'test'
-    PROD = 'prod'
+from .utils import connection_types, registered_schema_types, register_connection_type, EnvironmentCollectionNameEnum
 
 class TypingConfig(BaseModel):
 
@@ -35,18 +17,27 @@ class PostgresConnectionSchema(TypingConfig):
     user: str
     password: str
 
-if len(registered_types) == 1:
-    ConnectionsSchemaList = TypeVar('ConnectionsSchemaList', bound=registered_types[0])
+if len(registered_schema_types) == 1:
+    ConnectionsSchemaList = TypeVar('ConnectionsSchemaList', bound=registered_schema_types[0])
 else:
-    ConnectionsSchemaList = TypeVar('ConnectionsSchemaList', *registered_types)
+    ConnectionsSchemaList = TypeVar('ConnectionsSchemaList', *registered_schema_types)
 
 class ConnectionSchema(TypingConfig):
 
     name: str
-    type: ConnectionTypeEnum
+    type: str
     metadata: dict[str,str] | None
     params: ConnectionsSchemaList
-    recon_info: Optional[dict[str,str|int]] | None = None
+    recon_info: Optional[dict[str,str|int]] = None
+
+    @field_validator('type', mode='after')
+    def type_validator(cls, v):
+
+        if v not in connection_types:
+
+            raise ValueError(f'Connection type {v} not registered. The allowed types are {list(connection_types.keys())}')
+
+        return v
 
 class ConnectionsCollectionSchema(TypingConfig):
 
@@ -63,10 +54,6 @@ class EnvironmentCollectionSchema(TypingConfig):
 class ConnectionsConfigSchema(TypingConfig):
 
     connections: EnvironmentCollectionSchema
-
-    def instantiate_connections(self):
-
-        ...
 
 __all__ = [
     'PostgresConnectionSchema',

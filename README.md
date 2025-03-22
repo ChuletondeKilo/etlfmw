@@ -1,0 +1,1 @@
+Els fitxers base.py es per crear les clases funcionals de cada objecte. La informació de metadata es carrega desde els config.py sobre els schema.py.
