@@ -1,4 +1,4 @@
-import connections.config
+import etlfmw.connections.main
 #  import pipelines.pipeline as pipeline
 
 # class PipelineFactory:

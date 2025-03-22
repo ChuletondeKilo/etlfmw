@@ -1,5 +1,5 @@
 from pydantic import BaseModel
-from ..connections.config import available_connections
+from ..connections.main import available_connections
 
 class TypingConfig(BaseModel):
 

@@ -1,14 +1,15 @@
 from pydantic import BaseModel, field_validator
-from typing import Type, TypeVar, Optional
-from enum import Enum
-from .utils import connection_types, registered_schema_types, register_connection_type, EnvironmentCollectionNameEnum
+from typing import Optional
+from .utils import *
+
 
 class TypingConfig(BaseModel):
 
     class Config:
         extra = 'forbid'
 
-@register_connection_type
+
+@register_schema_type
 class PostgresConnectionSchema(TypingConfig):
 
     host: str
@@ -17,17 +18,25 @@ class PostgresConnectionSchema(TypingConfig):
     user: str
     password: str
 
-if len(registered_schema_types) == 1:
-    ConnectionsSchemaList = TypeVar('ConnectionsSchemaList', bound=registered_schema_types[0])
-else:
-    ConnectionsSchemaList = TypeVar('ConnectionsSchemaList', *registered_schema_types)
+# Register schema types for each source
+allowed_types = None
+
+for type in available_schema_types:
+
+    if allowed_types:
+
+        allowed_types = allowed_types | type
+    
+    else:
+
+        allowed_types = type
 
 class ConnectionSchema(TypingConfig):
 
     name: str
     type: str
     metadata: dict[str,str] | None
-    params: ConnectionsSchemaList
+    params: allowed_types
     recon_info: Optional[dict[str,str|int]] = None
 
     @field_validator('type', mode='after')
@@ -42,10 +51,6 @@ class ConnectionSchema(TypingConfig):
 class ConnectionsCollectionSchema(TypingConfig):
 
     sources: list[ConnectionSchema]
-
-    def gather_conn_names(self):
-
-        return {item.name.upper(): item.name for item in self.sources}
 
 class EnvironmentCollectionSchema(TypingConfig):
 

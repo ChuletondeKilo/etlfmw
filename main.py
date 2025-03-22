@@ -1,7 +1,7 @@
 import etlfmw
-from etlfmw.connections import config
+from etlfmw.connections import main
 
-print(config.conn_manager)
+print(main.conn_manager)
 # pipeline = Pipeline(steps=[Extractor(connection=ConnectionPostgre(config['postgres']))])
 # pipeline.run()
 

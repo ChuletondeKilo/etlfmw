@@ -1,6 +1,6 @@
 from enum import Enum
 from pydantic import BaseModel
-from typing import Type
+from typing import Type, TypeVar
 
 connection_types = {}
 
@@ -21,11 +21,20 @@ def register_connection_class(name: str):
     return decorator
 
 # Registry to store models
-registered_schema_types: list[Type[BaseModel]] = []
+available_schema_types = []
 
-def register_connection_type(cls: Type[BaseModel]) -> Type[BaseModel]:
-    registered_schema_types.append(cls)
-    return cls
+def register_schema_type(cls):
+
+    def wrapper(*args, **kwargs):
+
+        return cls(*args, **kwargs)
+    
+    global available_schema_types
+
+    available_schema_types.append(cls)
+
+    return wrapper
+
 
 class EnvironmentCollectionNameEnum(Enum):
 
