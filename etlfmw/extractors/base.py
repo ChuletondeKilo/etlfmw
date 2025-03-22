@@ -1,7 +1,7 @@
 from typing import Any
-from .interface import ExtractorI, ConnectionI as ExtractorI, ConnectionI
+from .interface import ExtractorI
 from .schema import ExtractorSchema
-from ..connections.interface import Connection
+from ..connections.base import Connection
 from uuid import uuid4
 
 class Extractor(ExtractorI):

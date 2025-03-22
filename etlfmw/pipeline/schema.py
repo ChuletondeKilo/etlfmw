@@ -1,29 +1,12 @@
 from pydantic import BaseModel
 from ..connections.main import available_connections
+from ..extractors.base import ExtractorSchema
+from ..loaders.base import LoaderSchema
 
 class TypingConfig(BaseModel):
 
     class Config:
         extra = 'forbid'
-
-class ExtractorSchema(TypingConfig):
-
-    name: str
-    source: available_connections
-    query: str
-
-class ExtractorCollectionSchema(TypingConfig):
-
-    extract: list[ExtractorSchema]
-
-class LoaderSchema(TypingConfig):
-
-    name: str
-    loader: str
-
-class LoaderCollectionSchema(TypingConfig):
-
-    load: list[LoaderSchema]
 
 class PipelineSchema(TypingConfig):
 

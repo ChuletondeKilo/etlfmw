@@ -1,11 +1,12 @@
 from typing import Any
-from ...interfaces import LoaderI, ConnectionI as LoaderI, ConnectionI
-from ..schema import LoaderSchema
+from .interface import LoaderI
+from .schema import LoaderSchema
+from ..connections.base import Connection
 from uuid import uuid4
 
 class Loader(LoaderI):
 
-    def __init__(self, config: Any, connection: ConnectionI, loader_schema: LoaderSchema):
+    def __init__(self, config: Any, connection: Connection, loader_schema: LoaderSchema):
 
         self.loader_uuid = uuid4()
         self.loader_schema = loader_schema
