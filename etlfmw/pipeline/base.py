@@ -2,7 +2,7 @@ from .schema import PipelinesConfigSchema
 from ..interfaces import PipelineI
 import extractors.base
 import loaders.base
-from .config import config as pipeline_schema
+from .main import config as pipeline_schema
 from uuid import uuid4
 
 class Pipeline(PipelineI):

@@ -1,5 +1,14 @@
-a = int | str
+class a:
 
-a = a | float
+    def test(self):
 
-print(a)
+        print('hola')
+
+class b(a):
+
+    def test(self):
+
+        print('adios')
+
+a().test()
+b().test()

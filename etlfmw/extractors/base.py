@@ -1,11 +1,12 @@
 from typing import Any
-from ...interfaces import ExtractorI, ConnectionI as ExtractorI, ConnectionI
-from ..schema import ExtractorSchema
+from .interface import ExtractorI, ConnectionI as ExtractorI, ConnectionI
+from .schema import ExtractorSchema
+from ..connections.interface import Connection
 from uuid import uuid4
 
 class Extractor(ExtractorI):
 
-    def __init__(self, connection: ConnectionI, extractor_schema: ExtractorSchema):
+    def __init__(self, connection: Connection, extractor_schema: ExtractorSchema):
 
         self.extractor_uuid = uuid4()
         self.extractor_schema = extractor_schema

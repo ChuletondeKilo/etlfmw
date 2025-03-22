@@ -1,15 +1,35 @@
-from ..interfaces import ConnectionI
 from .schema import ConnectionsCollectionSchema
-from ..interfaces import ConnectionI
+from .interface import ConnectionI
 import psycopg2
 from psycopg2._psycopg import connection as postgreconn, cursor as postgrecursor
 from psycopg2.errors import OperationalError
 from ..connections.schema import PostgresConnectionSchema, ConnectionSchema
 from .utils import register_connection_class, connection_types
 
+class Connection(ConnectionI):
+
+    def connect(self):
+
+        ...
+
+    def disconnect(self) -> None:
+
+        ...
+    
+    def reconnect(self):
+
+        ...
+
+    def execute(self, query):
+
+        ...
+
+    def load(self, data):
+
+        ...
 
 @register_connection_class("postgres")
-class ConnectionPostgre(ConnectionI):
+class ConnectionPostgre(Connection):
 
     __slots__ = ['metadata', '_params', 'recon_info', 'connection', 'cursor']
 

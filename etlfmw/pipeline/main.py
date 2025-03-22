@@ -1,8 +1,8 @@
 import yaml
 from .schema import PipelinesConfigSchema
 from pathlib import Path
-from .. import common
+from os import getcwd
 
-with Path(f"{common.cwd}/config/config.yaml").open('r') as f:
+with Path(getcwd() + "/config.yaml").open('r') as f:
     config_data = yaml.safe_load(f)
     config: PipelinesConfigSchema = PipelinesConfigSchema(**config_data)
